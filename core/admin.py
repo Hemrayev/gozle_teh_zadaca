@@ -3,7 +3,8 @@ from .models import *
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name']
+    list_filter = ['name']
 
 
 class NewsAdmin(admin.ModelAdmin):

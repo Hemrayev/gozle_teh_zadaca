@@ -5,7 +5,7 @@ from django.utils.translation import gettext
 
 class Category(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField(unique=True, max_length=255, verbose_name="Url")
+    slug = models.SlugField(unique=True, max_length=255, verbose_name="Url",blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
