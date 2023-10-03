@@ -30,8 +30,8 @@ class News(models.Model):
     link = models.URLField(verbose_name=gettext("Web sahypasy"))
     description = models.TextField(blank=False, verbose_name=gettext("Beýany"))
     content = models.TextField(blank=False, verbose_name=gettext("Mazmuny"))
-    image = models.TextField(verbose_name=gettext("Suraty"))
-    thumbnail = models.TextField(verbose_name=gettext("Kiçi suraty"))
+    image = models.TextField(verbose_name=gettext("Suraty"),blank=False)
+    thumbnail = models.TextField(verbose_name=gettext("Kiçi suraty"), blank=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -39,9 +39,6 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
-
-    def encoding_to_base64(self):
-        self.image
 
     class Meta:
         ordering = ["-pub_date"]
