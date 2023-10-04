@@ -2,15 +2,12 @@ import base64
 import os
 import django
 import requests
-
+from models import News
 from bs4 import BeautifulSoup
-from django.db import models
-from .models import News
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "parser.settings")
-
 django.setup()
-
 url = requests.get('https://turkmenportal.com/tm/rss/')
 soup = BeautifulSoup(url.content, 'xml')
 entries = soup.findAll('item')
@@ -31,9 +28,7 @@ for entry in entries:
         thumbnail = encoded_string
 
         news_create = News.objects.create(source=source, rss_feed=rss, title_en=title, title_ru=title, title_tm=title,
-                                                      pub_date=pub_date, link=link, description=description,
-                                                      content=content, image=encoded_string, thumbnail=encoded_string)
+                                          description=description, description_ru=description, description_en=description,
+                                          content=content, content_ru=content, content_en=content, image=encoded_string,
+                                          thumbnail=encoded_string, pub_date=pub_date, link=link,)
         news_create.save()
-
-        # f.write(encoded_string.decode('utf-8') + "\n")
-        # f.write("----------------------------------------------\n\n")

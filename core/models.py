@@ -29,7 +29,7 @@ class News(models.Model):
     pub_date = models.DateTimeField(verbose_name="Goýlan wagty")
     link = models.URLField(verbose_name="Web sahypasy")
     description = models.TextField(blank=False, verbose_name="Beýany")
-    content = models.TextField(blank=False, verbose_name=Mazmuny)
+    content = models.TextField(blank=False, verbose_name="Mazmuny")
     image = models.TextField(verbose_name="Suraty", blank=False)
     thumbnail = models.TextField(verbose_name="Kiçi suraty", blank=False)
 
