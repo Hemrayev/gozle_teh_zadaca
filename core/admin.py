@@ -8,7 +8,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class NewsAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ['source', 'category', 'pub_date']
 
 
 admin.site.register(Category, CategoryAdmin)

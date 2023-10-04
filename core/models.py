@@ -5,7 +5,7 @@ from django.utils.translation import gettext
 
 class Category(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
-    slug = models.SlugField(unique=True, max_length=255, verbose_name="Url",blank=True, null=True)
+    slug = models.SlugField(unique=True, max_length=255, verbose_name="Url", blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -16,22 +16,22 @@ class Category(models.Model):
 
     class Meta:
         ordering = ["name"]
-        verbose_name = gettext("Kategoriýa")
-        verbose_name_plural = gettext("Kategoriýalar")
+        verbose_name = "Kategoriýa"
+        verbose_name_plural = "Kategoriýalar"
 
 
 class News(models.Model):
     source = models.URLField()
     rss_feed = models.URLField()
-    title = models.CharField(max_length=500, blank=False, null=False, verbose_name=gettext("Titul"))
+    title = models.CharField(max_length=500, blank=False, null=False, verbose_name="Titul")
     slug = models.SlugField(max_length=500, unique=True, verbose_name="url")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
-    pub_date = models.DateTimeField(verbose_name=gettext("Goýlan wagty"))
-    link = models.URLField(verbose_name=gettext("Web sahypasy"))
-    description = models.TextField(blank=False, verbose_name=gettext("Beýany"))
-    content = models.TextField(blank=False, verbose_name=gettext("Mazmuny"))
-    image = models.TextField(verbose_name=gettext("Suraty"),blank=False)
-    thumbnail = models.TextField(verbose_name=gettext("Kiçi suraty"), blank=False)
+    pub_date = models.DateTimeField(verbose_name="Goýlan wagty")
+    link = models.URLField(verbose_name="Web sahypasy")
+    description = models.TextField(blank=False, verbose_name="Beýany")
+    content = models.TextField(blank=False, verbose_name=Mazmuny)
+    image = models.TextField(verbose_name="Suraty", blank=False)
+    thumbnail = models.TextField(verbose_name="Kiçi suraty", blank=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -42,7 +42,7 @@ class News(models.Model):
 
     class Meta:
         ordering = ["-pub_date"]
-        verbose_name = gettext("Habar")
-        verbose_name_plural = gettext("Habarlar")
+        verbose_name = "Habar"
+        verbose_name_plural = "Habarlar"
 
 
