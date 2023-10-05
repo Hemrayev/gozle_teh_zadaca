@@ -1,4 +1,5 @@
 venv
 static
 .idea
-core/test.txt
+migrations
+

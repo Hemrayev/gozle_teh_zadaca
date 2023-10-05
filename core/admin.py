@@ -4,7 +4,6 @@ from .models import *
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
-    list_filter = ['name']
 
 
 class NewsAdmin(admin.ModelAdmin):
