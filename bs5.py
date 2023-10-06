@@ -7,11 +7,14 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "parser.settings")
 django.setup()
 
 import requests
-from core.models import News
+from core.models import News, Rss
 from bs4 import BeautifulSoup
 
 
 if __name__ == '__main__':
+    # for item in Rss.objects.all():
+
+
     url = requests.get('https://turkmenportal.com/tm/rss/')
     soup = BeautifulSoup(url.content, 'xml')
     entries = soup.findAll('item')

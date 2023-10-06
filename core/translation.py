@@ -10,3 +10,8 @@ class CategoryTranslationOptions(TranslationOptions):
 @register(News)
 class NewsTranslationOptions(TranslationOptions):
     fields = ('title', 'description', 'content')
+
+
+@register(Rss)
+class RssTranslationOptions(TranslationOptions):
+    fields = ('name', )
