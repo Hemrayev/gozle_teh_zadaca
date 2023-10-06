@@ -13,8 +13,6 @@ from bs4 import BeautifulSoup
 
 if __name__ == '__main__':
     # for item in Rss.objects.all():
-
-
     url = requests.get('https://turkmenportal.com/tm/rss/')
     soup = BeautifulSoup(url.content, 'xml')
     entries = soup.findAll('item')
