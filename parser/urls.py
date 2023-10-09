@@ -19,11 +19,37 @@ from django.urls import path, include
 from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.urls import re_path
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 from .settings import DEBUG
+
+from core.views import *
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="API Docs",
+        default_version='v1',
+        description="Rss parser",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="hemrayevdovletgeldi@gmail.com"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
 
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
+    path('api/', API.as_view()),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api1/', API1.as_view()),
+    path('swagger1/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api2/', API1.as_view()),
+    path('swagger2/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),

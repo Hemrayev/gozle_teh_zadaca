@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'modeltranslation',
+    'drf_yasg',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'parser',
         'USER': 'postgres',
-        'PASSWORD': '93eboner',
+        'PASSWORD': 'adlebap123',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
