@@ -15,3 +15,4 @@ class NewsTranslationOptions(TranslationOptions):
 @register(Rss)
 class RssTranslationOptions(TranslationOptions):
     fields = ('name', )
+

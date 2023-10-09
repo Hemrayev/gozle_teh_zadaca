@@ -39,9 +39,9 @@ class Rss(models.Model):
 
 
 class News(models.Model):
-    source = models.ForeignKey(Source, on_delete=models.CASCADE)
-    rss_feed = models.ForeignKey(Rss, on_delete=models.CASCADE)
-    category = models.ManyToManyField(Category, blank=True, null=True)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE,blank=True, null=True)
+    rss_feed = models.ManyToManyField(Rss, blank=True)
+    category = models.ManyToManyField(Category, blank=True)
     title = models.CharField(max_length=500, blank=False, null=False, verbose_name="Titul")
     pub_date = models.DateTimeField(verbose_name="Goýlan wagty")
     link = models.URLField(verbose_name="Web sahypasy")
