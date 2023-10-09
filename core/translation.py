@@ -7,11 +7,6 @@ class CategoryTranslationOptions(TranslationOptions):
     fields = ('name', )
 
 
-@register(News)
-class NewsTranslationOptions(TranslationOptions):
-    fields = ('title', 'content')
-
-
 @register(Rss)
 class RssTranslationOptions(TranslationOptions):
     fields = ('name', )
