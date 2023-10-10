@@ -38,18 +38,19 @@ schema_view = get_schema_view(
         license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
 )
 
 
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('api/', API.as_view()),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api2/', API2.as_view()),
     path('api1/', API1.as_view()),
-    path('swagger1/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('api2/', API1.as_view()),
-    path('swagger2/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+
+    # path('swagger1/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+
+    # path('swagger2/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
@@ -58,5 +59,3 @@ urlpatterns += i18n_patterns(
 
 if DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-

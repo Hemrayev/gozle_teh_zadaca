@@ -16,7 +16,7 @@ class Category(models.Model):
 
 
 class Source(models.Model):
-    name = models.URLField()
+    name = models.URLField(verbose_name='Haysy_sayt')
 
     def __str__(self):
         return self.name
@@ -29,6 +29,7 @@ class Source(models.Model):
 
 class Rss(models.Model):
     name = models.URLField()
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, verbose_name="haysy_sayt")
 
     def __str__(self):
         return self.name
@@ -39,8 +40,8 @@ class Rss(models.Model):
 
 
 class News(models.Model):
-    source = models.ForeignKey(Source, on_delete=models.CASCADE,blank=True, null=True)
-    rss_feed = models.ForeignKey(Rss, on_delete=models.CASCADE, blank=True,null=True)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, blank=True, null=True, verbose_name="haysy_ssylka")
+    rss_feed = models.ForeignKey(Rss, on_delete=models.CASCADE, blank=True, null=True)
     category = models.ManyToManyField(Category, blank=True)
     title = models.CharField(max_length=500, blank=False, null=False, verbose_name="Titul")
     pub_date = models.DateTimeField(verbose_name="Goýlan wagty")
@@ -58,7 +59,7 @@ class News(models.Model):
 
 
 class NewsEnglish(models.Model):
-    source = models.ForeignKey(Source, on_delete=models.CASCADE,blank=True, null=True)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE,blank=True, null=True, verbose_name="haysy_ssylka")
     rss_feed = models.ForeignKey(Rss, on_delete=models.CASCADE, blank=True)
     category = models.ManyToManyField(Category, blank=True)
     title = models.CharField(max_length=500, blank=False, null=False, verbose_name="Titul")
@@ -75,8 +76,9 @@ class NewsEnglish(models.Model):
         verbose_name = "Habar_Inlis"
         verbose_name_plural = "Habarlar_Inlis"
 
+
 class NewsRussian(models.Model):
-    source = models.ForeignKey(Source, on_delete=models.CASCADE, blank=True, null=True)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, blank=True, null=True, verbose_name="haysy_ssylka")
     rss_feed = models.ForeignKey(Rss,on_delete=models.CASCADE, blank=True, null=True)
     category = models.ManyToManyField(Category, blank=True)
     title = models.CharField(max_length=500, blank=False, null=False, verbose_name="Titul")
