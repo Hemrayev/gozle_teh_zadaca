@@ -27,7 +27,7 @@ def get_values(index, entries):
     one_feed = {'etitle': entries.title if 'title' in entries else f'title {index}',
                 'summary': entries.summary if 'summary' in entries else f'no summary {index}',
                 'elink': entries.link if 'link' in entries else f'link {index}',
-                'published': entries.published if 'published' in entries else f'no published {index}',
+                'published': entries.published if 'published' in entries else "",
                 'category': [t.get('term') for t in
                              entries.tags] if 'category' in entries else f'no categories {index}',
                 'elink_img': entries.links[1].href or image if 'links' in entries and len(
@@ -58,29 +58,52 @@ if __name__ == '__main__':
             dp1 = feedparser.parse(item.name_en)
         if item.name_ru:
             dp2 = feedparser.parse(item.name_ru)
-        #
+
         for i, entry in enumerate(dp.entries):
             value = get_values(i, entry)
-            # if News.objects.get(title=value['etitle']):
-            # print(value['category'], f'-> {i}')
-            dj = News.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
-                                     rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
-                                     source=item.source,
-                                     )
-            for term in value['category']:
-                category_id = CategoryTk.objects.get_or_create(name=term)
-                dj.category_tk.add()
+            try:
+                dj = News.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
+                                         rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
+                                         source=item.source,
+                                         )
+                if value['category'] != "":
+                    for term in value['category']:
+                        obj, category = CategoryTk.objects.get_or_create(name=term)
+                        dj.category_tk.add(obj.id)
+                        dj.save()
+                dj.save()
+            except:
+                pass
 
-            dj.save()
+        for i, entry in enumerate(dp1.entries):
+            value = get_values(i, entry)
+            try:
+                dj = NewsEnglish.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
+                                         rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
+                                         source=item.source,
+                                         )
+                if value['category'] != "":
+                    for term in value['category']:
+                        obj, category = CategoryEn.objects.get_or_create(name=term)
+                        dj.category_en.add(obj.id)
+                        dj.save()
+                dj.save()
+            except:
+                pass
 
-    # for i, entry in enumerate(dp1.entries):
-    #     value = get_values(i, entry)
-    #     NewsEnglish.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
-    #                                rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
-    #                                source_id=item.source_id)
-    #
-    # for i, entry in enumerate(dp2.entries):
-    #     value = get_values(i, entry)
-    #     NewsRussian.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
-    #                                rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
-    #                                source_id=item.source_id)
+        for i, entry in enumerate(dp2.entries):
+            value = get_values(i, entry)
+            try:
+                dj = NewsRussian.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
+                                                rss_feed_id=item.id, pub_date=value['published'],
+                                                image=value['elink_img'],
+                                                source=item.source,
+                                                )
+                if value['category'] != "":
+                    for term in value['category']:
+                        obj, category = CategoryRu.objects.get_or_create(name=term)
+                        dj.category_ru.add(obj.id)
+                        dj.save()
+                dj.save()
+            except:
+                pass
