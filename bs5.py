@@ -27,9 +27,9 @@ def get_values(index, entries):
     one_feed = {'etitle': entries.title if 'title' in entries else f'title {index}',
                 'summary': entries.summary if 'summary' in entries else f'no summary {index}',
                 'elink': entries.link if 'link' in entries else f'link {index}',
-                'published': entries.published if 'published' in entries else "",
+                'published': entries.published if 'published' in entries else f'no published {index}',
                 'category': [t.get('term') for t in
-                             entries.tags] if 'category' in entries else f'no categories {index}',
+                             entries.tags] if 'category' in entries else "",
                 'elink_img': entries.links[1].href or image if 'links' in entries and len(
                     entries.links) > 1 else f'no link_img {index}'}
 
