@@ -8,7 +8,7 @@ from dateutil.parser import parse
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "parser.settings")
 django.setup()
 
-from core.models import News, Rss, NewsEnglish, NewsRussian
+from core.models import *
 
 
 def find_between(s, first, last):
@@ -21,12 +21,15 @@ def find_between(s, first, last):
 
 
 def get_values(index, entries):
+
     d = find_between(entries.summary, 'src="', '"')
+
     one_feed = {'etitle': entries.title if 'title' in entries else f'title {index}',
                 'summary': entries.summary if 'summary' in entries else f'no summary {index}',
                 'elink': entries.link if 'link' in entries else f'link {index}',
                 'published': entries.published if 'published' in entries else f'no published {index}',
-                # 'category': [t.get('term') for t in e.tags] if 'category' in e else f'no categories {i}',
+                'category': [t.get('term') for t in
+                             entries.tags] if 'category' in entries else f'no categories {index}',
                 'elink_img': entries.links[1].href or image if 'links' in entries and len(
                     entries.links) > 1 else f'no link_img {index}'}
 
@@ -55,21 +58,29 @@ if __name__ == '__main__':
             dp1 = feedparser.parse(item.name_en)
         if item.name_ru:
             dp2 = feedparser.parse(item.name_ru)
-
+        #
         for i, entry in enumerate(dp.entries):
             value = get_values(i, entry)
-            News.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
-                                rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
-                                source_id=item.source_id)
+            # if News.objects.get(title=value['etitle']):
+            # print(value['category'], f'-> {i}')
+            dj = News.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
+                                     rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
+                                     source=item.source,
+                                     )
+            for term in value['category']:
+                category_id = CategoryTk.objects.get_or_create(name=term)
+                dj.category_tk.add()
 
-        for i, entry in enumerate(dp1.entries):
-            value = get_values(i, entry)
-            NewsEnglish.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
-                                       rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
-                                       source_id=item.source_id)
+            dj.save()
 
-        for i, entry in enumerate(dp2.entries):
-            value = get_values(i, entry)
-            NewsRussian.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
-                                       rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
-                                       source_id=item.source_id)
+    # for i, entry in enumerate(dp1.entries):
+    #     value = get_values(i, entry)
+    #     NewsEnglish.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
+    #                                rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
+    #                                source_id=item.source_id)
+    #
+    # for i, entry in enumerate(dp2.entries):
+    #     value = get_values(i, entry)
+    #     NewsRussian.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
+    #                                rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
+    #                                source_id=item.source_id)

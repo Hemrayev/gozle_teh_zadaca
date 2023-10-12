@@ -3,33 +3,58 @@ from django.utils.text import slugify
 from django.utils.translation import gettext
 
 
-class Category(models.Model):
+class CategoryTk(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
 
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ["name"]
-        verbose_name = "Kategoriýa"
-        verbose_name_plural = "Kategoriýalar"
+        verbose_name = "Kategoriýa_Tk"
+        verbose_name_plural = "Kategoriýalar_Tk"
 
 
-class Source(models.Model):
-    name = models.URLField(verbose_name='Haysy_sayt')
+class CategoryEn(models.Model):
+    name = models.CharField(max_length=255, blank=False, null=False)
 
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     class Meta:
-        ordering = ['name']
-        verbose_name = "Sslyka"
-        verbose_name_plural = "Ssylkalar"
+        ordering = ["name"]
+        verbose_name = "Kategoriýa_En"
+        verbose_name_plural = "Kategoriýalar_En"
+
+
+class CategoryRu(models.Model):
+    name = models.CharField(max_length=255, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Kategoriýa_Ru"
+        verbose_name_plural = "Kategoriýalar_Ru"
 
 
 class Rss(models.Model):
-    name = models.URLField()
-    source = models.ForeignKey(Source, on_delete=models.CASCADE, verbose_name="haysy_sayt")
+    name = models.URLField(verbose_name="Rss_sahypasy")
+    source = models.URLField(verbose_name="haysy_sayt")
+    logo = models.TextField(verbose_name='Logotipi')
 
     def __str__(self):
         return self.name
@@ -40,10 +65,11 @@ class Rss(models.Model):
 
 
 class News(models.Model):
-    source = models.ForeignKey(Source, on_delete=models.CASCADE, blank=True, null=True, verbose_name="haysy_ssylka")
     rss_feed = models.ForeignKey(Rss, on_delete=models.CASCADE, blank=True, null=True)
-    category = models.ManyToManyField(Category, blank=True)
+    source = models.URLField()
+    category_tk = models.ManyToManyField(CategoryTk, blank=True)
     title = models.CharField(max_length=500, blank=False, null=False, verbose_name="Titul")
+    slug = models.SlugField(max_length=255, verbose_name='Api_urly', unique=True)
     pub_date = models.DateTimeField(verbose_name="Goýlan wagty")
     link = models.URLField(verbose_name="Web sahypasy")
     content = models.TextField(blank=False, verbose_name="Mazmuny")
@@ -51,6 +77,10 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ["-pub_date"]
@@ -59,9 +89,10 @@ class News(models.Model):
 
 
 class NewsEnglish(models.Model):
-    source = models.ForeignKey(Source, on_delete=models.CASCADE,blank=True, null=True, verbose_name="haysy_ssylka")
     rss_feed = models.ForeignKey(Rss, on_delete=models.CASCADE, blank=True)
-    category = models.ManyToManyField(Category, blank=True)
+    source = models.URLField()
+    category_en = models.ManyToManyField(CategoryEn, blank=True)
+    slug = models.SlugField(max_length=255, verbose_name='Api_urly')
     title = models.CharField(max_length=500, blank=False, null=False, verbose_name="Titul")
     pub_date = models.DateTimeField(verbose_name="Goýlan wagty")
     link = models.URLField(verbose_name="Web sahypasy")
@@ -70,6 +101,10 @@ class NewsEnglish(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ["-pub_date"]
@@ -78,9 +113,10 @@ class NewsEnglish(models.Model):
 
 
 class NewsRussian(models.Model):
-    source = models.ForeignKey(Source, on_delete=models.CASCADE, blank=True, null=True, verbose_name="haysy_ssylka")
-    rss_feed = models.ForeignKey(Rss,on_delete=models.CASCADE, blank=True, null=True)
-    category = models.ManyToManyField(Category, blank=True)
+    rss_feed = models.ForeignKey(Rss, on_delete=models.CASCADE, blank=True, null=True)
+    source = models.URLField()
+    category_ru = models.ManyToManyField(CategoryRu, blank=True)
+    slug = models.SlugField(max_length=255, verbose_name='Api_urly')
     title = models.CharField(max_length=500, blank=False, null=False, verbose_name="Titul")
     pub_date = models.DateTimeField(verbose_name="Goýlan wagty")
     link = models.URLField(verbose_name="Web sahypasy")
@@ -90,8 +126,14 @@ class NewsRussian(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ["-pub_date"]
         verbose_name = "Habar_Rus"
         verbose_name_plural = "Habarlar_Rus"
+
+
 
