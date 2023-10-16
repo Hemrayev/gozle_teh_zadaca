@@ -1,7 +1,9 @@
 import base64
 import os
+from urllib.request import urlopen
+
 import django
-import requests
+# import requests
 import feedparser
 from dateutil.parser import parse
 
@@ -20,7 +22,7 @@ def find_between(s, first, last):
         return ""
 
 
-def get_values(index, entries):
+def get_values(index, entries, source):
 
     d = find_between(entries.summary, 'src="', '"')
 
@@ -37,8 +39,10 @@ def get_values(index, entries):
         one_feed['elink_img'] = d
 
     if one_feed['elink_img'] != f'no link_img {index}':
-        img = requests.get(one_feed['elink_img'])
-        encoded_string = base64.b64encode(img.content)
+        if one_feed['elink_img'].find("https://"):
+            one_feed['elink_img'] = source + one_feed['elink_img']
+        # img = urllib.request..body()
+        encoded_string = base64.b64encode(urlopen(one_feed['elink_img']).read())
         encoded_string = encoded_string.decode('utf-8')
         one_feed['elink_img'] = encoded_string
         one_feed['published'] = parse(one_feed['published'])
@@ -58,9 +62,10 @@ if __name__ == '__main__':
             dp1 = feedparser.parse(item.name_en)
         if item.name_ru:
             dp2 = feedparser.parse(item.name_ru)
-
+        print(item.source)
         for i, entry in enumerate(dp.entries):
-            value = get_values(i, entry)
+            value = get_values(i, entry, item.source)
+            # print(value['elink_img'])
             try:
                 dj = News.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
                                          rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
@@ -76,7 +81,7 @@ if __name__ == '__main__':
                 pass
 
         for i, entry in enumerate(dp1.entries):
-            value = get_values(i, entry)
+            value = get_values(i, entry, item.source)
             try:
                 dj = NewsEnglish.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
                                          rss_feed_id=item.id, pub_date=value['published'], image=value['elink_img'],
@@ -92,7 +97,7 @@ if __name__ == '__main__':
                 pass
 
         for i, entry in enumerate(dp2.entries):
-            value = get_values(i, entry)
+            value = get_values(i, entry, item.source)
             try:
                 dj = NewsRussian.objects.create(title=value['etitle'], content=value['summary'], link=value['elink'],
                                                 rss_feed_id=item.id, pub_date=value['published'],
